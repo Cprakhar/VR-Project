@@ -17,6 +17,9 @@ public class PlayerMovement : MonoBehaviour
     float walking = 0f;
     public float walk_st = 1.0f;
     public float walk_ed = 1.0f;
+    float runningSpeed = 1.5f;
+    float originalSpeed = 1.0f;
+    public float multiplier = 2f;
 
     Vector3 velocity;
 
@@ -25,12 +28,15 @@ public class PlayerMovement : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        runningSpeed = multiplier * speed;
+        originalSpeed = speed;
 
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
@@ -58,6 +64,17 @@ public class PlayerMovement : MonoBehaviour
             {
                 walking -= walk_ed *Time.deltaTime;
             }
+        }
+
+        if(Input.GetKey(KeyCode.LeftShift) & animator.GetFloat("Walking") > 0.5)
+        {
+            animator.SetBool("isRunning", true);
+            speed = runningSpeed;
+        }
+        else
+        {
+            animator.SetBool("isRunning", false);
+            speed = originalSpeed;
         }
         animator.SetFloat("Walking", walking);  
         controller.Move(speed * Time.deltaTime * move);
