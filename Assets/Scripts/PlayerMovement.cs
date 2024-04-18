@@ -20,6 +20,8 @@ public class PlayerMovement : MonoBehaviour
     float runningSpeed = 1.5f;
     float originalSpeed = 1.0f;
     public float multiplier = 2f;
+    public float greetDistance = 5.0f;
+    public GameObject NPC;
 
     Vector3 velocity;
 
@@ -79,6 +81,16 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("Walking", walking);  
         controller.Move(speed * Time.deltaTime * move);
         controller.Move(velocity * Time.deltaTime);
+
+        if((transform.position - NPC.transform.position).magnitude < greetDistance)
+        {
+            NPC.transform.LookAt(transform);
+            NPC.GetComponent<Animator>().SetBool("Greet", true);
+        }
+        else
+        {
+            NPC.GetComponent<Animator>().SetBool("Greet", false);
+        }
 
     }
 }
