@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     CharacterController controller;
+    public AudioManager audioManager;
     Animator animator;
     public float speed = 12.0f;
     public float gravity = -9.81f;
@@ -22,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     public float multiplier = 2f;
     public float greetDistance = 5.0f;
     public GameObject NPC;
+    AudioSource[] audioSources;
 
     Vector3 velocity;
 
@@ -32,6 +34,10 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         runningSpeed = multiplier * speed;
         originalSpeed = speed;
+        audioManager = FindObjectOfType<AudioManager>();
+        audioSources = GetComponents<AudioSource>();
+
+        // audioManager.Play("walking");
 
     }
 
@@ -59,6 +65,9 @@ public class PlayerMovement : MonoBehaviour
             {
                 walking += walk_st * Time.deltaTime;
             }
+
+            
+
         }
         else
         {
@@ -72,6 +81,7 @@ public class PlayerMovement : MonoBehaviour
         {
             animator.SetBool("isRunning", true);
             speed = runningSpeed;
+            
         }
         else
         {
@@ -92,5 +102,13 @@ public class PlayerMovement : MonoBehaviour
             NPC.GetComponent<Animator>().SetBool("Greet", false);
         }
 
+        if(animator.GetBool("isRunning")){
+            audioSources[1].enabled = true;
+            audioSources[0].enabled = false;
+        }
+        else{
+            audioSources[0].enabled = true;
+            audioSources[1].enabled = false;
+        }
     }
 }
